@@ -21,4 +21,4 @@ int main() {
     return 0;
 }
 // cmd + shif + p -> CMake: Run Without Debugging
-// cmd + shif + p -> CMake: Debug
+// cmd + shif + p -> CMake: De
