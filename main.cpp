@@ -37,6 +37,29 @@ int main(void)
         // Update
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
+
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            Vector2 delta = GetMouseDelta();
+            angleX -= delta.x * 0.005f;
+            angleY += delta.y * 0.005f;
+
+            // Limit vertical angle to avoid flipping
+            if (angleY > 1.5f) angleY = 1.5f;
+            if (angleY < -1.5f) angleY = -1.5f;
+        }
+        if (IsKeyPressed(KEY_SPACE)){
+            distance += 0.5f;
+            if (distance < 1.0f) distance = 1.0f; // Prevent camera from going too close
+        }
+        if (IsKeyPressed(KEY_LEFT_SHIFT)) {
+            distance -= 0.5f;
+            if (distance < 1.0f) distance = 1.0f; // Prevent camera from going too close
+        }
+
+        // Calculate new camera position using spherical coordinates
+        camera.position.x = camera.target.x + distance * cosf(angleY) * sinf(angleX);
+        camera.position.y = camera.target.y + distance * sinf(angleY);
+        camera.position.z = camera.target.z + distance * cosf(angleY) * cosf(angleX);
         //----------------------------------------------------------------------------------
 
         // Draw
@@ -47,7 +70,7 @@ int main(void)
 
             BeginMode3D(camera);
 
-
+                // for demonstration purposes to draw vectors that represent the path of the robotic arm
                 DrawCylinderEx((Vector3){ -2.0f, 0.0f, 0.0f }, (Vector3){ 2.0f, 0.0f, 0.0f }, .1f,.1f,16, RED);
                 DrawCylinderEx((Vector3){ 2.0f, 0.0f, 0.0f }, (Vector3){ 4.0f, 2.0f, 3.0f }, .1f,.1f,16, RED);
                 
@@ -65,22 +88,7 @@ int main(void)
 
         EndDrawing();
 
-        
-
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-            Vector2 delta = GetMouseDelta();
-            angleX -= delta.x * 0.005f;
-            angleY += delta.y * 0.005f;
-
-            // Limit vertical angle to avoid flipping
-            if (angleY > 1.5f) angleY = 1.5f;
-            if (angleY < -1.5f) angleY = -1.5f;
-        }
-
-        // Calculate new camera position using spherical coordinates
-        camera.position.x = camera.target.x + distance * cosf(angleY) * sinf(angleX);
-        camera.position.y = camera.target.y + distance * sinf(angleY);
-        camera.position.z = camera.target.z + distance * cosf(angleY) * cosf(angleX);
+    
 
         //----------------------------------------------------------------------------------
     }
@@ -93,4 +101,4 @@ int main(void)
     return 0;
 }
 // cmd + shif + p -> CMake: Run Without Debugging
-// cmd + shif + p -> CMake: De
+// cmd + shif + p -> CMake: Debug
