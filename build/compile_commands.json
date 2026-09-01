@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/Users/garrett/Documents/GitHub/Motion Planning Simulator/build",
+  "command": "/usr/bin/clang++ -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP -DUSE_LIBTYPE_SHARED -isystem /opt/homebrew/include -g -std=gnu++17 -arch arm64 -F/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/System/Library/Frameworks  -o CMakeFiles/MyApp.dir/main.cpp.o -c \"/Users/garrett/Documents/GitHub/Motion Planning Simulator/main.cpp\"",
+  "file": "/Users/garrett/Documents/GitHub/Motion Planning Simulator/main.cpp",
+  "output": "/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/CMakeFiles/MyApp.dir/main.cpp.o"
+}
+]

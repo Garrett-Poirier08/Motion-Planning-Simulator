@@ -20,3 +20,5 @@ int main() {
     CloseWindow();
     return 0;
 }
+// cmd + shif + p -> CMake: Run Without Debugging
+// cmd + shif + p -> CMake: Debug
