@@ -1,104 +1,213 @@
+// Vector3D GUI - draw (x,y,z) points as vectors from the origin in 3D space
+// Built with raylib (3D rendering) + raygui (immediate-mode GUI panel)
+
 #include "raylib.h"
-#include <math.h>
+#include "raymath.h"
+#include "rcamera.h" // CameraYaw / CameraPitch / CameraMoveToTarget live here, not in raylib.h
 
-//------------------------------------------------------------------------------------
-// Program main entry point
-//------------------------------------------------------------------------------------
-int main(void)
-{
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - 3d camera mode");
+#include <vector>
+#include <string>
+#include <cstdio>
+#include <cstring>
 
-    // Define the camera to look into our 3d world
+struct VectorEntry {
+    Vector3 point;
+    Color   color;
+    std::string label;
+};
+
+// A small fixed palette so each new vector gets a distinct, readable color.
+static Color NextColor(int index) {
+    static const Color palette[] = {
+        RED, GREEN, BLUE, ORANGE, PURPLE, GOLD,
+        LIME, SKYBLUE, MAGENTA, MAROON, DARKGREEN, VIOLET
+    };
+    return palette[index % (int)(sizeof(palette) / sizeof(palette[0]))];
+}
+
+// Draws a vector as a cylindrical shaft + a cone arrowhead at the tip.
+static void DrawArrow3D(Vector3 from, Vector3 to, Color color) {
+    Vector3 dir = Vector3Subtract(to, from);
+    float len = Vector3Length(dir);
+    if (len < 0.0001f) {
+        DrawSphere(to, 0.05f, color);
+        return;
+    }
+    Vector3 dirNorm = Vector3Scale(dir, 1.0f / len);
+
+    float headLen = fminf(0.35f, len * 0.25f); // arrowhead length scales with vector, capped
+    float shaftLen = len - headLen;
+    Vector3 headStart = Vector3Add(from, Vector3Scale(dirNorm, shaftLen));
+
+    float shaftRadius = 0.025f;
+    float headRadius = 0.09f;
+
+    if (shaftLen > 0.001f) {
+        DrawCylinderEx(from, headStart, shaftRadius, shaftRadius, 8, color);
+    }
+    DrawCylinderEx(headStart, to, headRadius, 0.0f, 12, color);
+}
+
+static void DrawAxes(float length) {
+    // X - red, Y - green, Z - blue
+    DrawArrow3D({0,0,0}, {length,0,0}, (Color){230,60,60,255});
+    DrawArrow3D({0,0,0}, {0,length,0}, (Color){60,200,80,255});
+    DrawArrow3D({0,0,0}, {0,0,length}, (Color){60,120,230,255});
+}
+
+int main() {
+    const int screenWidth = 1200;
+    const int screenHeight = 750;
+    const int panelWidth = 300;
+
+    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE);
+    InitWindow(screenWidth, screenHeight, "Vector3D - raylib point/vector viewer");
+    SetTargetFPS(60);
+
     Camera3D camera = { 0 };
-    camera.position = (Vector3){ 0.0f, 10.0f, 10.0f };
-    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f }; // The object
-    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
-    camera.fovy = 45.0f;
+    camera.position = (Vector3){ 8.0f, 8.0f, 8.0f };
+    camera.target   = (Vector3){ 0.0f, 0.0f, 0.0f };
+    camera.up       = (Vector3){ 0.0f, 1.0f, 0.0f };
+    camera.fovy     = 45.0f;
     camera.projection = CAMERA_PERSPECTIVE;
 
-    float distance = 10.0f;
-    float angleX = 0.0f;
-    float angleY = 45.0f;
-    
+    std::vector<VectorEntry> vectors;
 
-    Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
+    // Text box buffers for X, Y, Z input
+    char bufX[32] = "0.0";
+    char bufY[32] = "0.0";
+    char bufZ[32] = "0.0";
+    bool editX = false, editY = false, editZ = false;
 
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-    //--------------------------------------------------------------------------------------
+    bool showGrid = true;
+    bool showAxes = true;
+    bool showLabels = true;
 
-    // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
-    {
-        // Update
-        //----------------------------------------------------------------------------------
-        // TODO: Update your variables here
+    int nextIndex = 0;
 
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-            Vector2 delta = GetMouseDelta();
-            angleX -= delta.x * 0.005f;
-            angleY += delta.y * 0.005f;
+    while (!WindowShouldClose()) {
+        int sw = GetScreenWidth();
+        int sh = GetScreenHeight();
+        Rectangle panelRect = { (float)(sw - panelWidth), 0, (float)panelWidth, (float)sh };
+        bool mouseOverPanel = CheckCollisionPointRec(GetMousePosition(), panelRect);
 
-            // Limit vertical angle to avoid flipping
-            if (angleY > 1.5f) angleY = 1.5f;
-            if (angleY < -1.5f) angleY = -1.5f;
-        }
-        if (IsKeyPressed(KEY_SPACE)){
-            distance += 0.5f;
-            if (distance < 1.0f) distance = 1.0f; // Prevent camera from going too close
-        }
-        if (IsKeyPressed(KEY_LEFT_SHIFT)) {
-            distance -= 0.5f;
-            if (distance < 1.0f) distance = 1.0f; // Prevent camera from going too close
+        // Only orbit/zoom the camera when the mouse isn't busy with the GUI panel
+        if (!mouseOverPanel) {
+            // Right-drag to orbit, wheel to zoom
+            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+                Vector2 delta = GetMouseDelta();
+                CameraYaw(&camera, -delta.x * 0.005f, true);
+                CameraPitch(&camera, -delta.y * 0.005f, true, true, false);
+            }
+            float wheel = GetMouseWheelMove();
+            if (wheel != 0) CameraMoveToTarget(&camera, -wheel * 0.8f);
         }
 
-        // Calculate new camera position using spherical coordinates
-        camera.position.x = camera.target.x + distance * cosf(angleY) * sinf(angleX);
-        camera.position.y = camera.target.y + distance * sinf(angleY);
-        camera.position.z = camera.target.z + distance * cosf(angleY) * cosf(angleX);
-        //----------------------------------------------------------------------------------
-
-        // Draw
-        //----------------------------------------------------------------------------------
         BeginDrawing();
+        ClearBackground((Color){ 245, 246, 248, 255 });
 
-            ClearBackground(RAYWHITE);
+        BeginMode3D(camera);
+            if (showGrid) DrawGrid(20, 1.0f);
+            if (showAxes) DrawAxes(3.0f);
 
-            BeginMode3D(camera);
+            for (auto& v : vectors) {
+                DrawArrow3D((Vector3){0,0,0}, v.point, v.color);
+            }
+        EndMode3D();
 
-                // for demonstration purposes to draw vectors that represent the path of the robotic arm
-                DrawCylinderEx((Vector3){ -2.0f, 0.0f, 0.0f }, (Vector3){ 2.0f, 0.0f, 0.0f }, .1f,.1f,16, RED);
-                DrawCylinderEx((Vector3){ 2.0f, 0.0f, 0.0f }, (Vector3){ 4.0f, 2.0f, 3.0f }, .1f,.1f,16, RED);
-                
-                //DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
-                //DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, MAROON);
-                
+        // Labels drawn in 2D space projected from 3D tip positions (stay readable, unlike 3D text)
+        if (showLabels) {
+            for (auto& v : vectors) {
+                Vector2 screenPos = GetWorldToScreen(v.point, camera);
+                if (screenPos.x < sw - panelWidth) {
+                    DrawText(v.label.c_str(), (int)screenPos.x + 6, (int)screenPos.y - 6, 16, DARKGRAY);
+                }
+            }
+        }
 
-                DrawGrid(25, 1.0f);
+        DrawFPS(10, sh - 24);
+        DrawText("Right-drag: orbit   |   Wheel: zoom", 10, 10, 18, DARKGRAY);
 
-            EndMode3D();
+        // ---------------- GUI PANEL ----------------
+        GuiPanel(panelRect, "Vector Controls");
 
-            DrawText("Welcome to the third dimension!", 10, 40, 20, DARKGRAY);
+        float px = panelRect.x + 15;
+        float py = 40;
+        float fieldW = panelWidth - 30;
 
-            DrawFPS(10, 10);
+        GuiLabel((Rectangle){ px, py, fieldW, 20 }, "New point (x, y, z):");
+        py += 24;
+
+        if (GuiTextBox((Rectangle){ px, py, fieldW, 28 }, bufX, sizeof(bufX), editX))
+            editX = !editX;
+        py += 34;
+        if (GuiTextBox((Rectangle){ px, py, fieldW, 28 }, bufY, sizeof(bufY), editY))
+            editY = !editY;
+        py += 34;
+        if (GuiTextBox((Rectangle){ px, py, fieldW, 28 }, bufZ, sizeof(bufZ), editZ))
+            editZ = !editZ;
+        py += 40;
+
+        if (GuiButton((Rectangle){ px, py, fieldW, 32 }, "Add Vector")) {
+            float x = (float)atof(bufX);
+            float y = (float)atof(bufY);
+            float z = (float)atof(bufZ);
+            VectorEntry e;
+            e.point = (Vector3){ x, y, z };
+            e.color = NextColor(nextIndex);
+            char lbl[64];
+            snprintf(lbl, sizeof(lbl), "V%d (%.2f, %.2f, %.2f)", nextIndex, x, y, z);
+            e.label = lbl;
+            vectors.push_back(e);
+            nextIndex++;
+        }
+        py += 40;
+
+        if (GuiButton((Rectangle){ px, py, fieldW, 28 }, "Clear All")) {
+            vectors.clear();
+        }
+        py += 40;
+
+        GuiLine((Rectangle){ px, py, fieldW, 1 }, NULL);
+        py += 12;
+
+        GuiCheckBox((Rectangle){ px, py, 20, 20 }, "Show grid", &showGrid);
+        py += 26;
+        GuiCheckBox((Rectangle){ px, py, 20, 20 }, "Show axes", &showAxes);
+        py += 26;
+        GuiCheckBox((Rectangle){ px, py, 20, 20 }, "Show labels", &showLabels);
+        py += 34;
+
+        GuiLine((Rectangle){ px, py, fieldW, 1 }, NULL);
+        py += 12;
+
+        GuiLabel((Rectangle){ px, py, fieldW, 20 }, "Vectors:");
+        py += 24;
+
+        // Scrollable-ish simple list (just clipped) with remove buttons
+        int removeIndex = -1;
+        int defaultTextColor = GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL);
+        for (int i = 0; i < (int)vectors.size(); i++) {
+            if (py > sh - 40) break; // stop drawing if we run out of panel space
+            Rectangle rowLabelRect = { px, py, fieldW - 34, 22 };
+            Rectangle rowBtnRect   = { px + fieldW - 28, py, 28, 22 };
+
+            GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt(vectors[i].color));
+            GuiLabel(rowLabelRect, TextFormat("V%d: (%.2f, %.2f, %.2f)", i,
+                     vectors[i].point.x, vectors[i].point.y, vectors[i].point.z));
+            GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, defaultTextColor);
+
+            if (GuiButton(rowBtnRect, "X")) removeIndex = i;
+            py += 26;
+        }
+        if (removeIndex >= 0) vectors.erase(vectors.begin() + removeIndex);
 
         EndDrawing();
-
-    
-
-        //----------------------------------------------------------------------------------
     }
 
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
-
+    CloseWindow();
     return 0;
 }
-// cmd + shif + p -> CMake: Run Without Debugging
-// cmd + shif + p -> CMake: Debug
