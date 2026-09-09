@@ -423,15 +423,6 @@ raylib_LIB_DEPENDS:STATIC=general;/Applications/Xcode.app/Contents/Developer/Pla
 //Value Computed by CMake
 raylib_SOURCE_DIR:STATIC=/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raylib-src/src
 
-//Value Computed by CMake
-vector3d_gui_BINARY_DIR:STATIC=/Users/garrett/Documents/GitHub/Motion Planning Simulator/build
-
-//Value Computed by CMake
-vector3d_gui_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-vector3d_gui_SOURCE_DIR:STATIC=/Users/garrett/Documents/GitHub/Motion Planning Simulator
-
 
 ########################
 # INTERNAL cache entries

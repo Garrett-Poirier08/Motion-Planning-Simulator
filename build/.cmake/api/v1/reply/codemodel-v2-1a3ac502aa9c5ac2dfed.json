@@ -54,7 +54,7 @@
 					"jsonFile" : "directory-_deps.raylib-build-Debug-16e533d2173ae0384d62.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.5"
+						"string" : "3.10"
 					},
 					"parentIndex" : 0,
 					"projectIndex" : 1,
@@ -74,7 +74,7 @@
 					"jsonFile" : "directory-_deps.raylib-build.raylib-Debug-591164d787b6968a573e.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.5"
+						"string" : "3.10"
 					},
 					"parentIndex" : 1,
 					"projectIndex" : 1,
