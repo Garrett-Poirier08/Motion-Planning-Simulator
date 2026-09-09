@@ -7,6 +7,12 @@
 },
 {
   "directory": "/Users/garrett/Documents/GitHub/Motion Planning Simulator/build",
+  "command": "/usr/bin/clang++ -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP -I\"/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raygui-src/src\" -I\"/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raylib-src/src\" -I\"/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raylib-src/src/external/glfw/include\" -g -std=gnu++17 -arch arm64 -o CMakeFiles/MotionPlanningSimulator.dir/PointStore.cpp.o -c \"/Users/garrett/Documents/GitHub/Motion Planning Simulator/PointStore.cpp\"",
+  "file": "/Users/garrett/Documents/GitHub/Motion Planning Simulator/PointStore.cpp",
+  "output": "/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/CMakeFiles/MotionPlanningSimulator.dir/PointStore.cpp.o"
+},
+{
+  "directory": "/Users/garrett/Documents/GitHub/Motion Planning Simulator/build",
   "command": "/usr/bin/clang -DGL_SILENCE_DEPRECATION -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP -I\"/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raylib-src/src\" -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks -isystem \"/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raylib-src/src/external/glfw/include\" -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -g -std=gnu99 -arch arm64 -o _deps/raylib-build/raylib/CMakeFiles/raylib.dir/raudio.c.o -c \"/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raylib-src/src/raudio.c\"",
   "file": "/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raylib-src/src/raudio.c",
   "output": "/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raylib-build/raylib/CMakeFiles/raylib.dir/raudio.c.o"

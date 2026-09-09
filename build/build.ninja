@@ -59,6 +59,16 @@ build CMakeFiles/MotionPlanningSimulator.dir/main.cpp.o: CXX_COMPILER__MotionPla
   OBJECT_FILE_DIR = CMakeFiles/MotionPlanningSimulator.dir
   TARGET_SUPPORT_DIR = CMakeFiles/MotionPlanningSimulator.dir
 
+build CMakeFiles/MotionPlanningSimulator.dir/PointStore.cpp.o: CXX_COMPILER__MotionPlanningSimulator_unscanned_Debug /Users/garrett/Documents/GitHub/Motion$ Planning$ Simulator/PointStore.cpp || cmake_object_order_depends_target_MotionPlanningSimulator
+  CONFIG = Debug
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  DEP_FILE = CMakeFiles/MotionPlanningSimulator.dir/PointStore.cpp.o.d
+  FLAGS = -g -std=gnu++17 -arch arm64
+  INCLUDES = -I"/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raygui-src/src" -I"/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raylib-src/src" -I"/Users/garrett/Documents/GitHub/Motion Planning Simulator/build/_deps/raylib-src/src/external/glfw/include"
+  OBJECT_DIR = CMakeFiles/MotionPlanningSimulator.dir
+  OBJECT_FILE_DIR = CMakeFiles/MotionPlanningSimulator.dir
+  TARGET_SUPPORT_DIR = CMakeFiles/MotionPlanningSimulator.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target MotionPlanningSimulator
@@ -67,7 +77,7 @@ build CMakeFiles/MotionPlanningSimulator.dir/main.cpp.o: CXX_COMPILER__MotionPla
 #############################################
 # Link the executable MotionPlanningSimulator
 
-build MotionPlanningSimulator: CXX_EXECUTABLE_LINKER__MotionPlanningSimulator_Debug CMakeFiles/MotionPlanningSimulator.dir/main.cpp.o | _deps/raylib-build/raylib/libraylib.a || _deps/raylib-build/raylib/external/glfw/src/glfw _deps/raylib-build/raylib/libraylib.a
+build MotionPlanningSimulator: CXX_EXECUTABLE_LINKER__MotionPlanningSimulator_Debug CMakeFiles/MotionPlanningSimulator.dir/main.cpp.o CMakeFiles/MotionPlanningSimulator.dir/PointStore.cpp.o | _deps/raylib-build/raylib/libraylib.a || _deps/raylib-build/raylib/external/glfw/src/glfw _deps/raylib-build/raylib/libraylib.a
   CONFIG = Debug
   FLAGS = -g -arch arm64
   LINK_FLAGS = -Wl,-search_paths_first -Wl,-headerpad_max_install_names

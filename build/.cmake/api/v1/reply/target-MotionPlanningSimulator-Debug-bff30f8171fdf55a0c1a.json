@@ -33,13 +33,13 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 35,
+				"line" : 38,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 39,
+				"line" : 42,
 				"parent" : 0
 			},
 			{
@@ -54,7 +54,7 @@
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 31,
+				"line" : 34,
 				"parent" : 0
 			}
 		]
@@ -117,7 +117,8 @@
 			},
 			"sourceIndexes" : 
 			[
-				0
+				0,
+				1
 			]
 		}
 	],
@@ -219,7 +220,8 @@
 			"name" : "Source Files",
 			"sourceIndexes" : 
 			[
-				0
+				0,
+				1
 			]
 		}
 	],
@@ -233,6 +235,16 @@
 			],
 			"compileGroupIndex" : 0,
 			"path" : "main.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"backtraces" : 
+			[
+				1
+			],
+			"compileGroupIndex" : 0,
+			"path" : "PointStore.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],
