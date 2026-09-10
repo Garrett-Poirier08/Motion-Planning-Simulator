@@ -67,19 +67,18 @@ static void DrawArm(Position j1, Position j2, Position j3, Position j4, Position
     Vector3 joint1 = {length1*cos(j1.getPitch())*cos(j1.getYaw()), length1*cos(j1.getPitch())*sin(j1.getYaw()), length1*sin(j1.getPitch())};
     Vector3 joint2 = {joint1.x + length2*cos(j2.getPitch())*cos(j2.getYaw()), joint1.y + length2*cos(j2.getPitch())*sin(j2.getYaw()), joint1.z + length2*sin(j2.getPitch())};
     Vector3 joint3 = {joint2.x + length3*cos(j3.getPitch())*cos(j3.getYaw()), joint2.y + length3*cos(j3.getPitch())*sin(j3.getYaw()), joint2.z + length3*sin(j3.getPitch())};
-    Vector3 joint4 = {joint3.x + length4*cos(j4.getPitch())*cos(j4.getYaw()), joint3.y + length4*cos(j4.getPitch())*sin(j4.getYaw()), joint3.z + length4*sin(j4.getPitch())};
-    Vector3 endEffector = {joint4.x + length5*cos(j5.getPitch())*cos(j5.getYaw()), joint4.y + length5*cos(j5.getPitch())*sin(j5.getYaw()), joint4.z + length5*sin(j5.getPitch())};
+
+    Vector3 endEffector = {joint3.x + length5*cos(j5.getPitch())*cos(j5.getYaw()), joint3.y + length5*cos(j5.getPitch())*sin(j5.getYaw()), joint3.z + length5*sin(j5.getPitch())};
    
     std::vector<float> convertedJoint1 = ConvertCoordinates().convertCoordinates(joint1.x, joint1.y, joint1.z);
     std::vector<float> convertedJoint2 = ConvertCoordinates().convertCoordinates(joint2.x, joint2.y, joint2.z);
     std::vector<float> convertedJoint3 = ConvertCoordinates().convertCoordinates(joint3.x, joint3.y, joint3.z);
-    std::vector<float> convertedJoint4 = ConvertCoordinates().convertCoordinates(joint4.x, joint4.y, joint4.z);
+    std::vector<float> convertedEndEffector = ConvertCoordinates().convertCoordinates(endEffector.x, endEffector.y, endEffector.z);
 
     joint1 = {convertedJoint1[0], convertedJoint1[1], convertedJoint1[2]};
     joint2 = {convertedJoint2[0], convertedJoint2[1], convertedJoint2[2]};
     joint3 = {convertedJoint3[0], convertedJoint3[1], convertedJoint3[2]};
-    joint4 = {convertedJoint4[0], convertedJoint4[1], convertedJoint4[2]};
-    endEffector = {convertedJoint4[0], convertedJoint4[1], convertedJoint4[2]};
+    endEffector = {convertedEndEffector[0], convertedEndEffector[1], convertedEndEffector[2]};
     
     DrawSphereEx(base, 0.1f, 16,16, (Color){200, 200, 200, 255});
     DrawCylinderEx(base, joint1, 0.05f, 0.05f, 8, (Color){150, 150, 150, 255});
@@ -88,9 +87,7 @@ static void DrawArm(Position j1, Position j2, Position j3, Position j4, Position
     DrawSphereEx(joint2, 0.1f, 16,16, (Color){200, 200, 200, 255});
     DrawCylinderEx(joint2, joint3, 0.05f, 0.05f, 8, (Color){150, 150, 150, 255});
     DrawSphereEx(joint3, 0.1f, 16,16, (Color){200, 200, 200, 255});
-    DrawCylinderEx(joint3, joint4, 0.05f, 0.05f, 8, (Color){150, 150, 150, 255});
-    DrawSphereEx(joint4, 0.1f, 16,16, (Color){200, 200, 200, 255});
-    DrawCylinderEx(joint4, endEffector, 0.05f, 0.05f, 8, (Color){150, 150, 150, 255});
+    DrawCylinderEx(joint3, endEffector, 0.05f, 0.05f, 8, (Color){150, 150, 150, 255});
 }
 
 int main() {
