@@ -155,9 +155,9 @@ int main() {
         py += 40;
 
         if (GuiButton((Rectangle){ px, py, fieldW, 32 }, "Add Point")) {
-            float x = (float)atof(bufX);
-            float y = (float)atof(bufY);
-            float z = (float)atof(bufZ);
+            float x = (float)atof(bufY);//swapped x and z so xyz goes in order of down not up for x,y,z
+            float y = (float)atof(bufZ);
+            float z = (float)atof(bufX);
             AddPoint((Vector3){ x, y, z });
             // Adding a new point breaks any previously drawn chain until
             // "Connect Points" is pressed again.
