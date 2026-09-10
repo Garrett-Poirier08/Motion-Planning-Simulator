@@ -1,7 +1,5 @@
 #include <iostream>
 #include <string>
-#include "Position.cpp"
-#include "Points.cpp"
 #include "Lines.cpp"
 #include <list>
 #include <vector>
@@ -12,7 +10,7 @@ class Path {
         std::string name;//the name of the path
         std::double_t maxSpeed;//the max speed of the path
         std::double_t maxAccel;//the max acceleration of the path
-        std::list<Lines> lines;//the points of the path
+        std::vector<Lines> lines;//the points of the path
         /**
          * Path class constructor used to initialize the path with its ID, name, and points. 
          * The constructor takes in three parameters: PathID, name, and points. 
@@ -24,7 +22,7 @@ class Path {
          * @param maxAccel The max acceleration of the path
          * @param points The points of the path
          */
-        Path(std::int32_t PathID, std::string name, std::double_t maxSpeed, std::double_t maxAccel, std::list<Lines> lines) {
+        Path(std::int32_t PathID, std::string name, std::double_t maxSpeed, std::double_t maxAccel, std::vector<Lines> lines) {
             this->PathID = PathID;
             this->name = name;
             this->maxSpeed = maxSpeed;
@@ -49,7 +47,7 @@ class Path {
         std::string getName() {
             return this->name;
         }
-        std::list<Lines> getLines() {
+        std::vector<Lines> getLines() {
             return this->lines  ;
         }
         std::double_t getMaxSpeed() {

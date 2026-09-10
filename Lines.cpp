@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include "Position.cpp"
 #include "Points.cpp"
 #include <vector>
 class Lines {
@@ -54,6 +53,7 @@ class Lines {
          */
         std::vector<Points> drawLine(Points start, Points end) {
             std::vector<Points> linePoints;
+            float scalvalue = sqrt(pow(end.getPos().getX() - start.getPos().getX(), 2) + pow(end.getPos().getY() - start.getPos().getY(), 2) + pow(end.getPos().getZ() - start.getPos().getZ(), 2));
             for(double_t t = 0; t <= 1; t += 0.01) {
                 std::double_t x = (1 - t) * start.getPos().getX() + t * end.getPos().getX();
                 std::double_t y = (1 - t) * start.getPos().getY() + t * end.getPos().getY();
