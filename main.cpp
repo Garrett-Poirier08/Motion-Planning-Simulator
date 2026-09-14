@@ -77,8 +77,9 @@ static void DrawArm(float x, float y, float z, float pitch,float yaw, float Base
     arm.SetPos(BaseX, BaseY, BaseZ);
     arm.SetLengths(Length1,Length2,Length3);
     arm.transformToVector();
-    DrawCylinderEx({BaseX,BaseY,BaseZ},{arm.GetX()[1],arm.GetY()[1],arm.GetZ()[1]},0.05f,0.05f,8,(Color){150, 150, 150, 255});
-    DrawCylinderEx({arm.GetX()[1],arm.GetY()[1],arm.GetZ()[1]},{arm.GetX()[2],arm.GetY()[2],arm.GetZ()[2]},0.05f,0.05f,8,(Color){150, 150, 150, 255});
+    DrawCylinderEx({BaseX,BaseY,BaseZ},{arm.GetY()[1],arm.GetZ()[1],arm.GetX()[1]},0.05f,0.05f,8,(Color){150, 150, 150, 255});
+    DrawCylinderEx({arm.GetY()[1],arm.GetZ()[1], arm.GetX()[1]},{arm.GetY()[2],arm.GetZ()[2],arm.GetX()[2]},0.05f,0.05f,8,(Color){150, 150, 150, 255});
+    DrawCylinderEx({arm.GetY()[2],arm.GetZ()[2], arm.GetX()[2]},{arm.GetY()[3],arm.GetZ()[3],arm.GetX()[3]},0.05f,0.05f,8,(Color){150, 150, 150, 255});
 }
 
 
