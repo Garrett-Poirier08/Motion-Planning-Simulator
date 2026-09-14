@@ -14,10 +14,10 @@
 #include "raygui.h"
 
 #include "PointStore.h"
-#include "Position.cpp"
+//#include "Position.cpp"
 #include "ConvertCordnates.cpp"
 #include "IK.cpp"
-
+#include "Path.cpp"
 #include <string>
 #include <cstdio>
 #include <cstring>
@@ -72,14 +72,15 @@ static void DrawAxes(float length) {
  * @param Length2 The length of the second joint
  * @param Length3 The length of the third joint
  */
-static void DrawArm(float x, float y, float z, float pitch,float yaw, Position Base, float Length1, float Length2, float Length3){
+static void DrawArm(float x, float y, float z, float pitch,float yaw, float BaseX, float BaseY, float BaseZ, float Length1, float Length2, float Length3){
     IK arm(x,y,z,pitch,yaw);
-    arm.SetPos(Base.getX(), Base.getY(), Base.getZ());
+    arm.SetPos(BaseX, BaseY, BaseZ);
     arm.SetLengths(Length1,Length2,Length3);
     arm.transformToVector();
-    DrawCylinderEx({Base.getX(),Base.getY(),Base.getZ()},{arm.GetX()[1],arm.GetY()[1],arm.GetZ()[1]},0.05f,0.05f,8,(Color){150, 150, 150, 255});
+    DrawCylinderEx({BaseX,BaseY,BaseZ},{arm.GetX()[1],arm.GetY()[1],arm.GetZ()[1]},0.05f,0.05f,8,(Color){150, 150, 150, 255});
     DrawCylinderEx({arm.GetX()[1],arm.GetY()[1],arm.GetZ()[1]},{arm.GetX()[2],arm.GetY()[2],arm.GetZ()[2]},0.05f,0.05f,8,(Color){150, 150, 150, 255});
 }
+
 
 int main() {
     const int screenWidth = 1200;
@@ -302,6 +303,7 @@ int main() {
             // TODO: hook up removal from other saved-point storage here.
 
             RemovePoint(removeIndex);
+
             SetPointsConnected(false); // chain changed, needs reconnecting
         }
 
